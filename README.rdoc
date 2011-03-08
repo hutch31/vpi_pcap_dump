@@ -1,0 +1,7 @@
+= VPI Pcap Library
+
+The VPI Pcap library provides a set of Verilog VPI calls which can be
+used to capture packets from a Verilog simulation and write them to
+a pcap format file, which can then be read in to Wireshark or other
+packet analysis tools.
+
