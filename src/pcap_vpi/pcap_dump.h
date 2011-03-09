@@ -1,5 +1,8 @@
-/*! \file pcap_vpi.h
- * Defines the pcap_vpi data structures and function calls
+/*! \file pcap_dump.h
+ * Defines the pcap_vpi data structures and function calls.   Proper sequence of calls is
+ * to first call pcap_open() to create a dumper, repeatedly call
+ * pcap_add_pkt() to add packets to the dumper, then call 
+ * pcap_shutdown() when finished.
  */
 
 /* Copyright (c) 2011, Guy Hutchison
@@ -19,20 +22,41 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 #include <stdint.h>
 #include <pcap.h>
 
+/*! Dumper context
+ * 
+ * Contains the pcap context used to start up as well as the
+ * dumper file containing packets.
+ */
 typedef struct {
   pcap_t *ctx;
   pcap_dumper_t *dump;
 } pcap_handle_t;
 
+/*! Packet information structure
+ *
+ * Contains the packet data and length, as well as the transmission
+ * time of the packet
+ */
 typedef struct {
-  int length;
+  /// packet length
+  int length;    
+  /// packet data
   uint8_t *pdata;
+  /// tx time in seconds
   uint32_t sec;
-  uint32_t usec;
+  /// tx time in microseconds
+  uint32_t usec; 
 } packet_info_t;
 
+/*! \brief Open up a dumper
+ * \return pcap_handle_t structure containing context and dumper
+ */
 pcap_handle_t pcap_open (char *filename, int bufsize);
+/*! \brief Add a packet to an active dumper
+ */
 void pcap_add_pkt (pcap_dumper_t *dump, packet_info_t *p);
+/*! \brief Shut down a dumper and close the pcap file
+ */
 void pcap_shutdown (pcap_handle_t *h);
 
 #endif /*PCAP_DUMP_H_*/
