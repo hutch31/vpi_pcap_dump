@@ -10,6 +10,11 @@
     <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
     <li id="current"><a href="files.html"><span>Files</span></a></li>
   </ul></div>
+<div class="tabs">
+  <ul>
+    <li><a href="files.html"><span>File&nbsp;List</span></a></li>
+    <li><a href="globals.html"><span>File&nbsp;Members</span></a></li>
+  </ul></div>
 <h1>pktqueue/pqpli.h File Reference</h1><code>#include &quot;vpi_user.h&quot;</code><br>
 <code>#include &quot;cv_vpi_user.h&quot;</code><br>
 <code>#include &lt;stdio.h&gt;</code><br>
@@ -18,24 +23,136 @@
 <a href="pqpli_8h-source.html">Go to the source code of this file.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="a834a33c60fcaa8d7622ee3836a47bb4"></a><!-- doxytag: member="pqpli.h::pq_request_queue_call" ref="a834a33c60fcaa8d7622ee3836a47bb4" args="()" -->
-PLI_INT32&nbsp;</td><td class="memItemRight" valign="bottom"><b>pq_request_queue_call</b> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">PLI_INT32&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="pqpli_8h.html#a834a33c60fcaa8d7622ee3836a47bb4">pq_request_queue_call</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="ddce219f7f3c8f1d91468bc6cbdf0e3e"></a><!-- doxytag: member="pqpli.h::pq_num_queues_call" ref="ddce219f7f3c8f1d91468bc6cbdf0e3e" args="()" -->
-PLI_INT32&nbsp;</td><td class="memItemRight" valign="bottom"><b>pq_num_queues_call</b> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create a queue.  <a href="#a834a33c60fcaa8d7622ee3836a47bb4"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">PLI_INT32&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="pqpli_8h.html#ddce219f7f3c8f1d91468bc6cbdf0e3e">pq_num_queues_call</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="2d2e313f2c2b56b1465899fa953e1aa2"></a><!-- doxytag: member="pqpli.h::pq_insert_packet_call" ref="2d2e313f2c2b56b1465899fa953e1aa2" args="()" -->
-PLI_INT32&nbsp;</td><td class="memItemRight" valign="bottom"><b>pq_insert_packet_call</b> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get number of queues.  <a href="#ddce219f7f3c8f1d91468bc6cbdf0e3e"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">PLI_INT32&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="pqpli_8h.html#2d2e313f2c2b56b1465899fa953e1aa2">pq_insert_packet_call</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="9bce4ff6d3ed42ea5b70385329f7b38e"></a><!-- doxytag: member="pqpli.h::pq_queue_size_call" ref="9bce4ff6d3ed42ea5b70385329f7b38e" args="()" -->
-PLI_INT32&nbsp;</td><td class="memItemRight" valign="bottom"><b>pq_queue_size_call</b> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Insert a packet in a queue.  <a href="#2d2e313f2c2b56b1465899fa953e1aa2"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">PLI_INT32&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="pqpli_8h.html#9bce4ff6d3ed42ea5b70385329f7b38e">pq_queue_size_call</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="8c3e68adfe039dc3a7e69470a5673d2e"></a><!-- doxytag: member="pqpli.h::pq_remove_packet_call" ref="8c3e68adfe039dc3a7e69470a5673d2e" args="()" -->
-PLI_INT32&nbsp;</td><td class="memItemRight" valign="bottom"><b>pq_remove_packet_call</b> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get depth of queue.  <a href="#9bce4ff6d3ed42ea5b70385329f7b38e"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">PLI_INT32&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="pqpli_8h.html#8c3e68adfe039dc3a7e69470a5673d2e">pq_remove_packet_call</a> ()</td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Remove packet from a queue.  <a href="#8c3e68adfe039dc3a7e69470a5673d2e"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
-C-compiliant function prototypes for packet queue PLI calls <hr size="1"><address style="align: right;"><small>Generated on Tue Mar 8 11:50:43 2011 for pcap_vpi by&nbsp;
+C-compiliant function prototypes for packet queue PLI calls. This file creates the VPI code needed to interface with the simulator to the generic pktqueue code. <hr><h2>Function Documentation</h2>
+<a class="anchor" name="2d2e313f2c2b56b1465899fa953e1aa2"></a><!-- doxytag: member="pqpli.h::pq_insert_packet_call" ref="2d2e313f2c2b56b1465899fa953e1aa2" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">PLI_INT32 pq_insert_packet_call           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Insert a packet in a queue. 
+<p>
+Usage: $pq_insert_packet (qid, len, buffer)<p>
+Insert a packet in a queue. The verilog buffer must be declared as an 8-bit wide array. The len parameter represents the length of the packet in bytes. 
+</div>
+</div><p>
+<a class="anchor" name="ddce219f7f3c8f1d91468bc6cbdf0e3e"></a><!-- doxytag: member="pqpli.h::pq_num_queues_call" ref="ddce219f7f3c8f1d91468bc6cbdf0e3e" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">PLI_INT32 pq_num_queues_call           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Get number of queues. 
+<p>
+Usage: $pq_num_queues (out num_queues)<p>
+Return the number of queues created. 
+</div>
+</div><p>
+<a class="anchor" name="9bce4ff6d3ed42ea5b70385329f7b38e"></a><!-- doxytag: member="pqpli.h::pq_queue_size_call" ref="9bce4ff6d3ed42ea5b70385329f7b38e" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">PLI_INT32 pq_queue_size_call           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Get depth of queue. 
+<p>
+Usage: $pq_queue_size (qid, out size)<p>
+Returns the number of packets currently residing in the queue. 
+</div>
+</div><p>
+<a class="anchor" name="8c3e68adfe039dc3a7e69470a5673d2e"></a><!-- doxytag: member="pqpli.h::pq_remove_packet_call" ref="8c3e68adfe039dc3a7e69470a5673d2e" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">PLI_INT32 pq_remove_packet_call           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Remove packet from a queue. 
+<p>
+Usage: $pq_remove_packet (qid, out len, out buffer)<p>
+Dequeues a packet from the listed queue and places it in the provided buffer. Updates the len variable to indicate how many bytes were in the packet.<p>
+buffer should be an 8-bit wide array deep enough to contain any possible packet. The len parameter should be an integer or 32-bit reg. The simulation should call $pq_queue_size() prior to calling $pq_remove_packet() to determine if there is a packet available to be dequeued. 
+</div>
+</div><p>
+<a class="anchor" name="a834a33c60fcaa8d7622ee3836a47bb4"></a><!-- doxytag: member="pqpli.h::pq_request_queue_call" ref="a834a33c60fcaa8d7622ee3836a47bb4" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">PLI_INT32 pq_request_queue_call           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Create a queue. 
+<p>
+Usage: $pq_request_queue (out qid)<p>
+This is the initial call to the pktqueue PLI. Each queue needs to be created by calling pq_request_queue. The simulation needs to keep track of the returned qid, although the pktqueue creates qids in the order that it is called. First qid is qid 0. Once created queues exist for the lifetime of the simulation. 
+</div>
+</div><p>
+<hr size="1"><address style="align: right;"><small>Generated on Tue Mar 8 17:37:19 2011 for pcap_vpi by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

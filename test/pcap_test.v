@@ -10,7 +10,7 @@ module pcap_test;
       for (i=0; i<100; i=i+1)
         mypacket[i] = i;
 
-      $pv_open (h);
+      $pv_open (h, "packet_dump.pcap");
       repeat (10)
         begin
           #100;
@@ -18,6 +18,7 @@ module pcap_test;
         end
 
       #1000;
+      $display ("Calling shutdown");
       $pv_shutdown (h);
       $finish;
     end

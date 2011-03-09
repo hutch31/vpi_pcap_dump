@@ -1,5 +1,3 @@
-/*! \file test_pcap_vpi.c */
-
 /* Copyright (c) 2011, Guy Hutchison
    All rights reserved.
 

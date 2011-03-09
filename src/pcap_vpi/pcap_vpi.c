@@ -1,3 +1,8 @@
+/*! \file pcap_vpi.c
+ * Contains the VPI routines used to allocate pcap dumpers, dump individual
+ * packets to a dumpfile, and shutdown afterwards.  Default has a maximum
+ * of 32 open dumpfiles for a simulation.
+ */
 /* Copyright (c) 2011, Guy Hutchison
    All rights reserved.
 
@@ -12,7 +17,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "pcap_vpi.h"
+#include "vpi_user.h"
 #include "pcap_dump.h"
 #include <assert.h>
 
@@ -36,32 +41,53 @@ vpiHandle *get_args (int expected) {
   assert ((iref_h = vpi_iterate(vpiArgument, call_h)) != NULL);
 
   while ((arg_h = vpi_scan(iref_h)) != NULL) {
-    //args.push_back (arg_h);
     alist[hindex++] = arg_h;
   }
 
   if ((expected != -1) && (hindex != expected)) {
-    vpi_printf ("PLI ERROR: expected %d argument MAX_OPEN_PCAP);s, got %d\n",
+    vpi_printf ("PLI ERROR: expected %d arguments, got %d\n",
 		expected, hindex);
   }
   return alist;
 }
 
-// $pv_open (phandle, filename);
+/*! \brief Create a new dumper (port)
+ * 
+ * Usage: $pv_open (phandle, filename)
+ * 
+ * Creates a single dumper file.  phandle must be a integer or 32-bit
+ * reg, filename should be a string.  Returns the index of the newly
+ * created dumper in phandle, which should be passed to future calls of
+ * pv_dump_packet() and pv_shutdown().
+ */
 void pv_open () {
   vpiHandle *args;
   int phandle;
   char filename[80];
-  
+  s_vpi_value arg_info;
+   
   phandle = pcap_used++;
   
   assert (phandle <  MAX_OPEN_PCAP);
   sprintf (filename, "pvdump%03d.pcap", phandle);
 
   pcap_handle[phandle] = pcap_open (filename, PCAP_BUFSIZE);
+
+  args = get_args (2); // doesn't pick up filename
+
+  arg_info.format = vpiIntVal;
+  arg_info.value.scalar = phandle;
+  vpi_put_value (args[0], &arg_info, NULL, vpiNoDelay);
 }
 
-// $pv_dump_packet (phandle, len, pkt);
+/*! \brief Dump a packet to an active dumper
+ * 
+ * Usage: $pv_dump_packet (phandle, len, pkt);
+ * 
+ * Takes a packet residing in buffer pkt of length len and stores it in
+ * the dumper referenced by phandle.  The packet is stored using the
+ * current simulation time as its time.
+ */
 void pv_dump_packet () {
   vpiHandle *args;
   s_vpi_value arg_info;
@@ -101,11 +127,15 @@ void pv_dump_packet () {
 
   assert (phandle < MAX_OPEN_PCAP);
   pcap_add_pkt (pcap_handle[phandle].dump, &p);
-  //pq.insert_packet (qid, pkt);
-  //v_error_check();  
 }
 
-// usage: $pv_shutdown (handle)
+/*! \brief Shutdown a dumper after use
+ * 
+ * Usage: $pv_shutdown (handle)
+ * 
+ * Shut down the dumper and close the file once simulation is complete.
+ * Handle should be value passed by the original pv_open() call.
+ */
 void pv_shutdown () {
   vpiHandle *args;
   s_vpi_value arg_info;
@@ -139,7 +169,7 @@ extern void pv_register(void)
 
   { vpiSysTask, 0, "$pv_open", pv_open, NULL, NULL, NULL },
   { vpiSysTask, 0, "$pv_dump_packet", pv_dump_packet, NULL, NULL, NULL },
-  { vpiSysTask, 0, "$pv_shutdown", pv_open, NULL, NULL, NULL },
+  { vpiSysTask, 0, "$pv_shutdown", pv_shutdown, NULL, NULL, NULL },
   { 0, 0, NULL, NULL, NULL, NULL, NULL }
  };
 
