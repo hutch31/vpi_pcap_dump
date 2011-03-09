@@ -51,7 +51,7 @@ vpiHandle *get_args (int expected) {
 void pv_open () {
   vpiHandle *args;
   int phandle;
-  char *filename;
+  char filename[80];
   
   phandle = pcap_used++;
   
@@ -69,6 +69,8 @@ void pv_dump_packet () {
   int phandle, len;
   packet_info_t p;
   int i;
+  s_vpi_time simtime;
+  uint64_t itime;
   
   args = get_args (3);
 
@@ -87,10 +89,15 @@ void pv_dump_packet () {
     p.pdata[i] = (uint8_t) arg_info.value.scalar;
   }
   
+  // get simulation time
+  simtime.type = vpiSimTime;
+  vpi_get_time (args[2], &simtime);
+  
   // fill in remainder of p struct
   p.length = len;
-  p.sec = 0;
-  p.usec = 0;
+  itime = ((uint64_t) simtime.high << 32) + (uint64_t) simtime.low;
+  p.sec = (itime * 1000LL) / 1000000LL;
+  p.usec = (itime * 1000LL) % 1000000LL; // assume ns timescale
 
   assert (phandle < MAX_OPEN_PCAP);
   pcap_add_pkt (pcap_handle[phandle].dump, &p);
@@ -98,15 +105,34 @@ void pv_dump_packet () {
   //v_error_check();  
 }
 
+// usage: $pv_shutdown (handle)
 void pv_shutdown () {
+  vpiHandle *args;
+  s_vpi_value arg_info;
+  int phandle;
+  
+  args = get_args (1);
+	
+  arg_info.format = vpiIntVal;
+  vpi_get_value (args[0], &arg_info);
+  phandle = arg_info.value.scalar;
+  
+  assert (pcap_handle[phandle].ctx != NULL);
+  assert (pcap_handle[phandle].dump != NULL);
+  pcap_shutdown (&pcap_handle[phandle]);
 }
 
 // Register VPI routines with the simulator
 extern void pv_register(void)
 {
  p_vpi_systf_data systf_data_p;
+ int i;
 
  pcap_used = 0;
+ for (i=0; i<MAX_OPEN_PCAP; i++) {
+ 	pcap_handle[i].ctx = NULL;
+ 	pcap_handle[i].dump = NULL;
+ }
  
  /* use predefined table form - could fill systf_data_list dynamically */
  static s_vpi_systf_data systf_data_list[] = {
