@@ -14,9 +14,25 @@ Redistribution and use in source and binary forms, with or without modification,
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef PCAP_VPI_H_
-#define PCAP_VPI_H_
-#include "pcap_dump.h"
-#include "vpi_user.h"
+#ifndef PCAP_DUMP_H_
+#define PCAP_DUMP_H_
+#include <stdint.h>
+#include <pcap.h>
 
-#endif /*PCAP_VPI_H_*/
+typedef struct {
+  pcap_t *ctx;
+  pcap_dumper_t *dump;
+} pcap_handle_t;
+
+typedef struct {
+  int length;
+  uint8_t *pdata;
+  uint32_t sec;
+  uint32_t usec;
+} packet_info_t;
+
+pcap_handle_t pcap_open (char *filename, int bufsize);
+void pcap_add_pkt (pcap_dumper_t *dump, packet_info_t *p);
+void pcap_shutdown (pcap_handle_t *h);
+
+#endif /*PCAP_DUMP_H_*/
