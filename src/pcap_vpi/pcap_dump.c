@@ -15,9 +15,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 #include "pcap_dump.h"
 #include <assert.h>
 
-void pcap_add_pkt (pcap_dumper_t *dump, packet_info_t *p) {
+void pcap_add_pkt (pcap_dumper_t *dump, packet_info_t *p) 
+{
   struct pcap_pkthdr hdr;
-		
   hdr.ts.tv_sec = p->sec;
   hdr.ts.tv_usec = p->usec;
   hdr.caplen = p->length;
@@ -25,17 +25,33 @@ void pcap_add_pkt (pcap_dumper_t *dump, packet_info_t *p) {
   pcap_dump ((u_char *) dump, &hdr, p->pdata);
 }
 
-pcap_handle_t pcap_open (char *filename, int bufsize)
+void pcap_get_pkt (pcap_t *ctx, packet_info_t *p) 
+{
+  struct pcap_pkthdr hdr;
+  p->pdata  = pcap_next (ctx, &hdr);
+  if (p->pdata != NULL)
+  {
+  p->sec    = hdr.ts.tv_sec;
+  p->usec   = hdr.ts.tv_usec;
+  p->length = hdr.caplen;
+  }
+}
+
+pcap_handle_t pcap_open (char *filename, int bufsize, int open_type)
 {
   pcap_handle_t h;
-
-  h.ctx = pcap_open_dead (DLT_EN10MB, bufsize);
-  h.dump = pcap_dump_open (h.ctx, filename);
-
+  if (open_type == 0)
+  {
+     h.ctx = pcap_open_dead (DLT_EN10MB, bufsize);
+     h.dump = pcap_dump_open (h.ctx, filename);
+  }
+  else
+     h.ctx =  pcap_open_offline (filename, errbuf);
   return h;
 }
 
-void pcap_shutdown (pcap_handle_t *h) {
-  pcap_dump_close (h->dump);
+void pcap_shutdown (pcap_handle_t *h) 
+{
+    pcap_dump_close (h->dump);
   pcap_close (h->ctx);
 }

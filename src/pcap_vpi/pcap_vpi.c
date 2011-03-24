@@ -53,7 +53,7 @@ vpiHandle *get_args (int expected) {
 
 /*! \brief Create a new dumper (port)
  * 
- * Usage: $pv_open (phandle, filename)
+ * Usage: $pv_open (phandle, filename, filetype)
  * 
  * Creates a single dumper file.  phandle must be a integer or 32-bit
  * reg, filename should be a string.  Returns the index of the newly
@@ -71,7 +71,7 @@ void pv_open () {
   assert (phandle <  MAX_OPEN_PCAP);
   sprintf (filename, "pvdump%03d.pcap", phandle);
 
-  pcap_handle[phandle] = pcap_open (filename, PCAP_BUFSIZE);
+  pcap_handle[phandle] = pcap_open (filename, PCAP_BUFSIZE, 0);
 
   args = get_args (2); // doesn't pick up filename
 

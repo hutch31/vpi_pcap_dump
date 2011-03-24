@@ -52,13 +52,18 @@ typedef struct {
   uint32_t usec; 
 } packet_info_t;
 
+char errbuf[PCAP_ERRBUF_SIZE];
+
 /*! \brief Open up a dumper
  * \return pcap_handle_t structure containing context and dumper
  */
-pcap_handle_t pcap_open (char *filename, int bufsize);
+pcap_handle_t pcap_open (char *filename, int bufsize, int open_type);
 /*! \brief Add a packet to an active dumper
  */
 void pcap_add_pkt (pcap_dumper_t *dump, packet_info_t *p);
+/*! \brief Get a packet to an active dumper
+ */
+void pcap_get_pkt (pcap_t *ctx, packet_info_t *p);
 /*! \brief Shut down a dumper and close the pcap file
  */
 void pcap_shutdown (pcap_handle_t *h);
