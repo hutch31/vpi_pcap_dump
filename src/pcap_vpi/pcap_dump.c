@@ -31,9 +31,9 @@ void pcap_get_pkt (pcap_t *ctx, packet_info_t *p)
   p->pdata  = pcap_next (ctx, &hdr);
   if (p->pdata != NULL)
   {
-  p->sec    = hdr.ts.tv_sec;
-  p->usec   = hdr.ts.tv_usec;
-  p->length = hdr.caplen;
+  	p->sec    = hdr.ts.tv_sec;
+  	p->usec   = hdr.ts.tv_usec;
+  	p->length = hdr.caplen;
   }
 }
 
@@ -52,6 +52,6 @@ pcap_handle_t pcap_open (char *filename, int bufsize, int open_type)
 
 void pcap_shutdown (pcap_handle_t *h) 
 {
-    pcap_dump_close (h->dump);
+  pcap_dump_close (h->dump);
   pcap_close (h->ctx);
 }

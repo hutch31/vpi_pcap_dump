@@ -51,6 +51,24 @@ vpiHandle *get_args (int expected) {
   return alist;
 }
 
+int inline getIntegerArgument (vpiHandle vh)
+{
+  s_vpi_value arg_info;
+
+  arg_info.format = vpiIntVal;
+  vpi_get_value (vh, &arg_info);
+  return arg_info.value.scalar;
+}
+
+void inline putIntegerArgument (vpiHandle vh, int a)
+{
+  s_vpi_value arg_info;
+  
+  arg_info.format = vpiIntVal;
+  arg_info.value.scalar = a;
+  vpi_put_value (vh, &arg_info, NULL, vpiNoDelay);
+}
+
 /*! \brief Create a new dumper (port)
  * 
  * Usage: $pv_open (phandle, filename, filetype)
@@ -59,25 +77,34 @@ vpiHandle *get_args (int expected) {
  * reg, filename should be a string.  Returns the index of the newly
  * created dumper in phandle, which should be passed to future calls of
  * pv_dump_packet() and pv_shutdown().
+ * 
+ * Filetype should be 0 for writing or 1 for reading
  */
 void pv_open () {
   vpiHandle *args;
   int phandle;
   char filename[80];
+  int filetype;
   s_vpi_value arg_info;
    
   phandle = pcap_used++;
   
   assert (phandle <  MAX_OPEN_PCAP);
-  sprintf (filename, "pvdump%03d.pcap", phandle);
 
-  pcap_handle[phandle] = pcap_open (filename, PCAP_BUFSIZE, 0);
-
-  args = get_args (2); // doesn't pick up filename
+  args = get_args (3); // doesn't pick up filename
 
   arg_info.format = vpiIntVal;
-  arg_info.value.scalar = phandle;
-  vpi_put_value (args[0], &arg_info, NULL, vpiNoDelay);
+  vpi_get_value (args[2], &arg_info);
+  filetype = arg_info.value.scalar;
+  
+  sprintf (filename, "pvdump%03d.pcap", phandle);
+
+  pcap_handle[phandle] = pcap_open (filename, PCAP_BUFSIZE, filetype);
+
+  //arg_info.format = vpiIntVal;
+  //arg_info.value.scalar = phandle;
+  //vpi_put_value (args[0], &arg_info, NULL, vpiNoDelay);
+  putIntegerArgument (args[0], phandle);
 }
 
 /*! \brief Dump a packet to an active dumper
@@ -100,6 +127,7 @@ void pv_dump_packet () {
   
   args = get_args (3);
 
+/*
   arg_info.format = vpiIntVal;
   vpi_get_value (args[0], &arg_info);
   phandle = arg_info.value.scalar;
@@ -107,6 +135,9 @@ void pv_dump_packet () {
   arg_info.format = vpiIntVal;
   vpi_get_value (args[1], &arg_info);
   len = arg_info.value.scalar;
+  */
+  phandle = getIntegerArgument (args[0]);
+  len = getIntegerArgument (args[1]);
 
   p.pdata = (uint8_t *) malloc (len);
   for (i=0; i<len; i++) {
@@ -128,7 +159,46 @@ void pv_dump_packet () {
   assert (phandle < MAX_OPEN_PCAP);
   pcap_add_pkt (pcap_handle[phandle].dump, &p);
 }
-
+/*! \brief Get a packet from an open dumpfile
+ * 
+ * Usage: $pv_get_packet (phandle, len, pkt, nstime);
+ * 
+ * Retrieve a packet from open dumpfile referenced by phandle.
+ * Packet length is placed in len, which should be an integer or
+ * reg[31:0].  pkt should be array of reg[7:0],  nstime is the
+ * timestamp of the packet in nanoseconds, and should also be an
+ * integer.
+ */
+ 
+ void pv_get_packet () {
+   vpiHandle *args, element;
+   s_vpi_value arg_info;
+   //vpiHandle arg_h;
+   packet_info_t p;
+   int i;
+   int phandle;
+ 
+   args = get_args (4);
+   
+   phandle = getIntegerArgument (args[0]);
+   assert ((phandle < MAX_OPEN_PCAP) && (phandle >= 0));
+   assert (pcap_handle[phandle].ctx != NULL);
+   
+   // read packet from pcap file
+   pcap_get_pkt (pcap_handle[phandle].ctx, &p);
+   
+   // store packet in array
+   arg_info.format = vpiIntVal;
+   for (i=0; i<p.length; i++) {
+     element = vpi_handle_by_index (args[2], i);
+     arg_info.value.scalar = p.pdata[i];
+     vpi_put_value (element, &arg_info, NULL, vpiNoDelay);
+   }
+   
+   putIntegerArgument (args[1], p.length);
+   putIntegerArgument (args[3], p.sec * 1000000 + p.usec * 1000); 
+ }
+ 
 /*! \brief Shutdown a dumper after use
  * 
  * Usage: $pv_shutdown (handle)
@@ -138,14 +208,17 @@ void pv_dump_packet () {
  */
 void pv_shutdown () {
   vpiHandle *args;
-  s_vpi_value arg_info;
+  //s_vpi_value arg_info;
   int phandle;
   
   args = get_args (1);
 	
+/*
   arg_info.format = vpiIntVal;
   vpi_get_value (args[0], &arg_info);
   phandle = arg_info.value.scalar;
+  */
+  phandle = getIntegerArgument (args[0]);
   
   assert (pcap_handle[phandle].ctx != NULL);
   assert (pcap_handle[phandle].dump != NULL);
@@ -169,6 +242,7 @@ extern void pv_register(void)
 
   { vpiSysTask, 0, "$pv_open", pv_open, NULL, NULL, NULL },
   { vpiSysTask, 0, "$pv_dump_packet", pv_dump_packet, NULL, NULL, NULL },
+  { vpiSysTask, 0, "$pv_get_packet", pv_get_packet, NULL, NULL, NULL },
   { vpiSysTask, 0, "$pv_shutdown", pv_shutdown, NULL, NULL, NULL },
   { 0, 0, NULL, NULL, NULL, NULL, NULL }
  };
