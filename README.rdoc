@@ -5,3 +5,10 @@ used to capture packets from a Verilog simulation and write them to
 a pcap format file, which can then be read in to Wireshark or other
 packet analysis tools.
 
+This library is dependent on the "pcap" library used by tcpdump and
+wireshark for their packet storage and description.  You can install
+this by doing:
+
+yum install libpcap-devel
+
+
