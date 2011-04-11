@@ -26,7 +26,9 @@ using std::vector;
 
 extern "C" {
 #include "vpi_user.h"
+#ifdef CVER
 #include "cv_vpi_user.h"
+#endif
   //#include "vpi_utils.h"
 }
 
