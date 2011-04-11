@@ -18,6 +18,9 @@ LIBPCAP=$(HOME)/env/libpcap-0.8.3
 pqpli.so : pqpli.o pktqueue.o pqpli_register.o pktcap.o
 	$(LD) $(LFLAGS) pqpli.o pktqueue.o pqpli_register.o -o $@
 
+pqpli.vpi: pqpli.cpp pktqueue.cpp pqpli_iv_register.c
+	iverilog-vpi $^
+
 clean:
 	rm -f *.o *.so
 

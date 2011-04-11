@@ -17,7 +17,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 
 #include "vpi_user.h"
+#ifdef CVER
 #include "cv_vpi_user.h"
+#endif
 #include <stdio.h>
 
 /*! \brief Create a queue

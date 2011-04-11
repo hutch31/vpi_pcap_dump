@@ -178,23 +178,3 @@ extern "C" PLI_INT32 pq_remove_packet_call ()
   pq.remove_packet (qid);
 }
 
-// Register VPI routines with the simulator
-extern "C" void pqpli_register(void)
-{
- p_vpi_systf_data systf_data_p;
-
- /* use predefined table form - could fill systf_data_list dynamically */
- static s_vpi_systf_data systf_data_list[] = {
-
-  { vpiSysTask, 0, "$pq_request_queue", pq_request_queue_call, NULL, NULL, NULL },
-  { vpiSysTask, 0, "$pq_num_queues", pq_num_queues_call, NULL, NULL, NULL },
-  { vpiSysTask, 0, "$pq_insert_packet", pq_insert_packet_call, NULL, NULL, NULL },
-  { vpiSysTask, 0, "$pq_queue_size", pq_queue_size_call, NULL, NULL, NULL },
-  { vpiSysTask, 0, "$pq_remove_packet", pq_remove_packet_call, NULL, NULL, NULL },
-
-  { 0, 0, NULL, NULL, NULL, NULL, NULL }
- };
-
- systf_data_p = &(systf_data_list[0]);
- while (systf_data_p->type != 0) vpi_register_systf(systf_data_p++);
-}

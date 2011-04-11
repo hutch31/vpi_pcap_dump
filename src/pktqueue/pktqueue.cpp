@@ -15,6 +15,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 
 #include "pktqueue.h"
+#include <assert.h>
 
 /*
 class pktqueue {
@@ -62,9 +63,8 @@ int pktqueue::remove_packet (uint32_t queue_id)
 
 packet_i pktqueue::front_iter (uint32_t queue_id)
 {
-  if ((queue_id >= 0) && (queue_id < queue_list.size())) {
-    return queue_list[queue_id].front().begin();
-  }
+  assert ((queue_id >= 0) && (queue_id < queue_list.size()));
+  return queue_list[queue_id].front().begin();
 }
 
 int pktqueue::front_size (uint32_t queue_id)
