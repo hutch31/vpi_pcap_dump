@@ -28,7 +28,7 @@ void pcap_add_pkt (pcap_dumper_t *dump, packet_info_t *p)
 void pcap_get_pkt (pcap_t *ctx, packet_info_t *p) 
 {
   struct pcap_pkthdr hdr;
-  p->pdata  = pcap_next (ctx, &hdr);
+  p->pdata  = (uint8_t *) pcap_next (ctx, &hdr);
   if (p->pdata != NULL)
   {
   	p->sec    = hdr.ts.tv_sec;
@@ -40,6 +40,9 @@ void pcap_get_pkt (pcap_t *ctx, packet_info_t *p)
 pcap_handle_t pcap_open (char *filename, int bufsize, int open_type)
 {
   pcap_handle_t h;
+
+  h.ctx = NULL; h.dump = NULL;
+
   if (open_type == 0)
   {
      h.ctx = pcap_open_dead (DLT_EN10MB, bufsize);
