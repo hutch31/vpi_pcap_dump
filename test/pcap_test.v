@@ -18,6 +18,7 @@ module pcap_test;
         begin
           #100;
           $pv_dump_packet (h, i, mypacket);
+          mypacket[0] = mypacket[0] + 1;
         end
 
       #1000;

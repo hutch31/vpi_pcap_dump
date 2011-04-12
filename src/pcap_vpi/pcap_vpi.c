@@ -57,7 +57,7 @@ int inline getIntegerArgument (vpiHandle vh)
 
   arg_info.format = vpiIntVal;
   vpi_get_value (vh, &arg_info);
-  return arg_info.value.scalar;
+  return arg_info.value.integer;
 }
 
 void inline putIntegerArgument (vpiHandle vh, int a)
@@ -65,7 +65,7 @@ void inline putIntegerArgument (vpiHandle vh, int a)
   s_vpi_value arg_info;
   
   arg_info.format = vpiIntVal;
-  arg_info.value.scalar = a;
+  arg_info.value.integer = a;
   vpi_put_value (vh, &arg_info, NULL, vpiNoDelay);
 }
 
@@ -95,7 +95,7 @@ void pv_open () {
 
   arg_info.format = vpiIntVal;
   vpi_get_value (args[2], &arg_info);
-  filetype = arg_info.value.scalar;
+  filetype = arg_info.value.integer;
   
   sprintf (filename, "pvdump%03d.pcap", phandle);
 
@@ -140,10 +140,11 @@ void pv_dump_packet () {
   len = getIntegerArgument (args[1]);
 
   p.pdata = (uint8_t *) malloc (len);
+  arg_info.format = vpiIntVal;
   for (i=0; i<len; i++) {
     arg_h = vpi_handle_by_index (args[2], i);
     vpi_get_value (arg_h, &arg_info);
-    p.pdata[i] = (uint8_t) arg_info.value.scalar;
+    p.pdata[i] = (uint8_t) arg_info.value.integer;
   }
   
   // get simulation time
@@ -191,7 +192,7 @@ void pv_dump_packet () {
    arg_info.format = vpiIntVal;
    for (i=0; i<p.length; i++) {
      element = vpi_handle_by_index (args[2], i);
-     arg_info.value.scalar = p.pdata[i];
+     arg_info.value.integer = p.pdata[i];
      vpi_put_value (element, &arg_info, NULL, vpiNoDelay);
    }
    
