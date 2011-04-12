@@ -20,6 +20,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 #include "vpi_user.h"
 #include "pcap_dump.h"
 #include <assert.h>
+#include <string.h>
 
 #define MAX_OPEN_PCAP 32
 #define PCAP_BUFSIZE 2048
@@ -60,6 +61,19 @@ int inline getIntegerArgument (vpiHandle vh)
   return arg_info.value.integer;
 }
 
+inline char *getStringArgument (vpiHandle vh)
+{
+  s_vpi_value arg_info;
+  char *buf;
+
+  arg_info.format = vpiStringVal;
+  vpi_get_value(vh, &arg_info);
+  buf = (char *) malloc (sizeof(arg_info.value.str));
+  strcpy (buf, arg_info.value.str);
+
+  return buf;
+}
+
 void inline putIntegerArgument (vpiHandle vh, int a)
 {
   s_vpi_value arg_info;
@@ -83,7 +97,7 @@ void inline putIntegerArgument (vpiHandle vh, int a)
 void pv_open () {
   vpiHandle *args;
   int phandle;
-  char filename[80];
+  char *filename;
   int filetype;
   s_vpi_value arg_info;
    
@@ -91,20 +105,18 @@ void pv_open () {
   
   assert (phandle <  MAX_OPEN_PCAP);
 
-  args = get_args (3); // doesn't pick up filename
+  args = get_args (3);
 
+  filename = getStringArgument (args[1]);
+  
   arg_info.format = vpiIntVal;
   vpi_get_value (args[2], &arg_info);
   filetype = arg_info.value.integer;
   
-  sprintf (filename, "pvdump%03d.pcap", phandle);
-
   pcap_handle[phandle] = pcap_open (filename, PCAP_BUFSIZE, filetype);
 
-  //arg_info.format = vpiIntVal;
-  //arg_info.value.scalar = phandle;
-  //vpi_put_value (args[0], &arg_info, NULL, vpiNoDelay);
   putIntegerArgument (args[0], phandle);
+  free (filename);
 }
 
 /*! \brief Dump a packet to an active dumper

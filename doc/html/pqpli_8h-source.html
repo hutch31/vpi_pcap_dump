@@ -31,16 +31,18 @@
 <a name="l00017"></a>00017 
 <a name="l00018"></a>00018 
 <a name="l00019"></a>00019 <span class="preprocessor">#include "vpi_user.h"</span>
-<a name="l00020"></a>00020 <span class="preprocessor">#include "cv_vpi_user.h"</span>
-<a name="l00021"></a>00021 <span class="preprocessor">#include &lt;stdio.h&gt;</span>
-<a name="l00022"></a>00022 
-<a name="l00033"></a>00033 PLI_INT32 pq_request_queue_call ();
-<a name="l00040"></a>00040 PLI_INT32 pq_num_queues_call ();
-<a name="l00049"></a>00049 PLI_INT32 pq_insert_packet_call ();
-<a name="l00056"></a>00056 PLI_INT32 pq_queue_size_call ();
-<a name="l00070"></a>00070 PLI_INT32 pq_remove_packet_call ();
-<a name="l00071"></a>00071 
-</pre></div><hr size="1"><address style="align: right;"><small>Generated on Mon Apr 4 10:14:32 2011 for pcap_vpi by&nbsp;
+<a name="l00020"></a>00020 <span class="preprocessor">#ifdef CVER</span>
+<a name="l00021"></a>00021 <span class="preprocessor"></span><span class="preprocessor">#include "cv_vpi_user.h"</span>
+<a name="l00022"></a>00022 <span class="preprocessor">#endif</span>
+<a name="l00023"></a>00023 <span class="preprocessor"></span><span class="preprocessor">#include &lt;stdio.h&gt;</span>
+<a name="l00024"></a>00024 
+<a name="l00035"></a>00035 PLI_INT32 pq_request_queue_call ();
+<a name="l00042"></a>00042 PLI_INT32 pq_num_queues_call ();
+<a name="l00051"></a>00051 PLI_INT32 pq_insert_packet_call ();
+<a name="l00058"></a>00058 PLI_INT32 pq_queue_size_call ();
+<a name="l00072"></a>00072 PLI_INT32 pq_remove_packet_call ();
+<a name="l00073"></a>00073 
+</pre></div><hr size="1"><address style="align: right;"><small>Generated on Tue Apr 12 11:29:39 2011 for pcap_vpi by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>
