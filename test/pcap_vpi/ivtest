@@ -1,0 +1,10 @@
+#!/bin/bash
+
+PCAP_DIR=../../src/pcap_vpi
+iverilog-vpi  $PCAP_DIR/pcap_vpi.c $PCAP_DIR/pcap_dump.c -lpcap
+iverilog -opcap_test.vvp pcap_test.v
+
+#valgrind vvp -M. -mpcap_vpi pcap_test.vvp
+vvp -M. -mpcap_vpi pcap_test.vvp
+
+

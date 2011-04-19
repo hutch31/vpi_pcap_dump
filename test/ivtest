@@ -1,8 +1,0 @@
-#!/bin/bash
-
-iverilog-vpi  ../src/pcap_vpi/pcap_vpi.c ../src/pcap_vpi/pcap_dump.c -lpcap
-iverilog -opcap_test.vvp pcap_test.v
-
-vvp -M. -mpcap_vpi pcap_test.vvp
-
-

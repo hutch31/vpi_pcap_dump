@@ -45,16 +45,19 @@ pcap_handle_t pcap_open (char *filename, int bufsize, int open_type)
 
   if (open_type == 0)
   {
-     h.ctx = pcap_open_dead (DLT_EN10MB, bufsize);
-     h.dump = pcap_dump_open (h.ctx, filename);
+    h.ctx = pcap_open_dead (DLT_EN10MB, bufsize);
+    h.dump = pcap_dump_open (h.ctx, filename);
   }
-  else
-     h.ctx =  pcap_open_offline (filename, errbuf);
+  else {
+    h.ctx =  pcap_open_offline (filename, errbuf);
+    h.dump = NULL;
+  }
   return h;
 }
 
 void pcap_shutdown (pcap_handle_t *h) 
 {
-  pcap_dump_close (h->dump);
+  if (h->dump != NULL)
+    pcap_dump_close (h->dump);
   pcap_close (h->ctx);
 }

@@ -68,7 +68,7 @@ inline char *getStringArgument (vpiHandle vh)
 
   arg_info.format = vpiStringVal;
   vpi_get_value(vh, &arg_info);
-  buf = (char *) malloc (sizeof(arg_info.value.str));
+  buf = (char *) malloc (sizeof(arg_info.value.str)+1);
   strcpy (buf, arg_info.value.str);
 
   return buf;
@@ -226,42 +226,36 @@ void pv_shutdown () {
   
   args = get_args (1);
 	
-/*
-  arg_info.format = vpiIntVal;
-  vpi_get_value (args[0], &arg_info);
-  phandle = arg_info.value.scalar;
-  */
   phandle = getIntegerArgument (args[0]);
   
   assert (pcap_handle[phandle].ctx != NULL);
-  assert (pcap_handle[phandle].dump != NULL);
   pcap_shutdown (&pcap_handle[phandle]);
 }
 
 // Register VPI routines with the simulator
 extern void pv_register(void)
 {
- p_vpi_systf_data systf_data_p;
- int i;
+  p_vpi_systf_data systf_data_p;
+  int i;
 
- pcap_used = 0;
- for (i=0; i<MAX_OPEN_PCAP; i++) {
- 	pcap_handle[i].ctx = NULL;
- 	pcap_handle[i].dump = NULL;
- }
+  pcap_used = 0;
+  for (i=0; i<MAX_OPEN_PCAP; i++) {
+    pcap_handle[i].ctx = NULL;
+    pcap_handle[i].dump = NULL;
+  }
  
- /* use predefined table form - could fill systf_data_list dynamically */
- static s_vpi_systf_data systf_data_list[] = {
+  /* use predefined table form - could fill systf_data_list dynamically */
+  static s_vpi_systf_data systf_data_list[] = {
 
-  { vpiSysTask, 0, "$pv_open", pv_open, NULL, NULL, NULL },
-  { vpiSysTask, 0, "$pv_dump_packet", pv_dump_packet, NULL, NULL, NULL },
-  { vpiSysTask, 0, "$pv_get_packet", pv_get_packet, NULL, NULL, NULL },
-  { vpiSysTask, 0, "$pv_shutdown", pv_shutdown, NULL, NULL, NULL },
-  { 0, 0, NULL, NULL, NULL, NULL, NULL }
- };
-
- systf_data_p = &(systf_data_list[0]);
- while (systf_data_p->type != 0) vpi_register_systf(systf_data_p++);
+    { vpiSysTask, 0, "$pv_open", pv_open, NULL, NULL, NULL },
+    { vpiSysTask, 0, "$pv_dump_packet", pv_dump_packet, NULL, NULL, NULL },
+    { vpiSysTask, 0, "$pv_get_packet", pv_get_packet, NULL, NULL, NULL },
+    { vpiSysTask, 0, "$pv_shutdown", pv_shutdown, NULL, NULL, NULL },
+    { 0, 0, NULL, NULL, NULL, NULL, NULL }
+  };
+  
+  systf_data_p = &(systf_data_list[0]);
+  while (systf_data_p->type != 0) vpi_register_systf(systf_data_p++);
 }
 
 // entry point for simulator
