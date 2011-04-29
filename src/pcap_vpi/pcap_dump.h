@@ -21,6 +21,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 #define PCAP_DUMP_H_
 #include <stdint.h>
 #include <pcap.h>
+
+#define PCAP_DUMP_READ  1
+#define PCAP_DUMP_WRITE 0
+
 #if defined(__cplusplus)
 extern "C"
 {

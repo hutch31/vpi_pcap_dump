@@ -43,7 +43,7 @@ pcap_handle_t pcap_open (char *filename, int bufsize, int open_type)
 
   h.ctx = NULL; h.dump = NULL;
 
-  if (open_type == 0)
+  if (open_type == PCAP_DUMP_WRITE)
   {
     h.ctx = pcap_open_dead (DLT_EN10MB, bufsize);
     h.dump = pcap_dump_open (h.ctx, filename);
