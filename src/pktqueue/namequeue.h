@@ -51,6 +51,7 @@ class namequeue {
   /// @param name Name of queue to insert
   /// @param pkt  Packet vector to insert
   int insert_packet (string name, packet_t &pkt);
+
   /// Return length of the named queue in number of packets
   /// @param name Name of queue
   int queue_size (string name);
@@ -59,13 +60,29 @@ class namequeue {
   /// @param name Name of queue
   /// @returns True if queue is empty, false otherwise
   bool queue_empty (string name);
+
   /// Return a packet iterator to the packet at the front of the queue.
   /// This call should be qualified by queue_size() or queue_empty() calls
   /// prior to calling.
   /// @param name Name of queue
   packet_i front_iter (string name);
+
+  
+  /// Return the size of the packet at the front of the queue
+  /// @param name Name of queue
+  /// @returns The size of the head packet in bytes, -1 if queue empty
   int front_size (string name);
+
+  /// Remove a packet from the front of the queue
+  /// @param name Name of queue
+  /// @returns 1 on successful packet removal, 0 if queue was empty
   int remove_packet (string name);
+
+  /// Copy the packet object and return a pointer to the new packet object
+  /// Caller is responsible for delete on the returned object pointer
+  /// @param name Name of queue
+  /// @returns Pointer to first packet on the queue, returns null if queue empty
+  packet_t *get_packet (string name);
 };
 
 #endif
