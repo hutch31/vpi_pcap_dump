@@ -68,7 +68,7 @@ inline char *getStringArgument (vpiHandle vh)
 
   arg_info.format = vpiStringVal;
   vpi_get_value(vh, &arg_info);
-  buf = (char *) malloc (sizeof(arg_info.value.str)+1);
+  buf = (char *) malloc (strlen(arg_info.value.str)+1);
   strcpy (buf, arg_info.value.str);
 
   return buf;
@@ -101,6 +101,7 @@ void pv_open () {
   int filetype;
   s_vpi_value arg_info;
    
+
   phandle = pcap_used++;
   
   assert (phandle <  MAX_OPEN_PCAP);
